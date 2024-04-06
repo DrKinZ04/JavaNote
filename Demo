@@ -1,0 +1,171 @@
+package NOTE;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Demo {
+    public static void main(String[] args) {
+        ArrayList<Student> array = new ArrayList<>();
+        boolean flag = true;
+        while (flag) {
+            System.out.println("--------欢迎使用学生管理系统--------");
+            System.out.println("1、添加信息");
+            System.out.println("2、删除信息");
+            System.out.println("3、修改信息");
+            System.out.println("4、查看所有");
+            System.out.println("0、退出系统");
+            System.out.println("请输入选项：");
+
+            Scanner s = new Scanner(System.in);
+            String choice = s.nextLine();
+
+            switch (choice) {
+                case "1":
+                    System.out.println("添加学生");
+                    addStu(array);
+                    break;
+                case "2":
+                    System.out.println("删除学生");
+                    delStu(array);
+                    break;
+                case "3":
+                    System.out.println("修改学生");
+                    chgStu(array);
+                    break;
+                case "4":
+                    System.out.println("所有信息");
+                    findAllStu(array);
+                    break;
+                case "0":
+                    flag = false; //或者使用：System.exit(0);JVM退出
+                    System.out.println("谢谢使用！");
+                    break;
+                default:
+                    System.out.println("输入有误，请重新输入：");
+            }
+        }
+    }
+
+    public static void addStu(ArrayList<Student> array) {
+        Scanner sc = new Scanner(System.in);
+        Student s = new Student();
+
+        boolean flag;
+        String id;
+        while (true) {
+            System.out.println("请输入学生学号：");
+            id = sc.nextLine();
+            flag = eqFlag(array, id);
+            if (flag) {
+                break;
+            } else {
+                System.out.println("学号已被占用，请重新输入：");
+            }
+        }
+        System.out.println("请输入学生姓名：");
+        String name = sc.nextLine();
+        System.out.println("请输入学生年龄：");
+        int age = sc.nextInt();
+        System.out.println("请输入学生地址：");
+        String addr = sc.next();
+
+
+        s.setId(id);
+        s.setName(name);
+        s.setAge(age);
+        s.setAddr(addr);
+
+        array.add(s);
+        System.out.println("添加成功！");
+    }
+
+
+    public static void findAllStu(ArrayList<Student> array) {
+        //if(array.size()==0)
+        if (array.isEmpty()) {
+            System.out.println("未录入数据，请先录入数据。");
+        } else {
+
+            System.out.println("学号\t\t姓名\t\t年龄\t\t地址");
+            //for(int i=0; i<array.size(); i++)
+            for (Student s : array) {
+                System.out.println(s.getId() + "\t\t" + s.getName() + "\t\t" + s.getAge() + "\t\t" + s.getAddr());
+            }
+        }
+    }
+
+    public static void delStu(ArrayList<Student> array) {
+        Scanner sc = new Scanner(System.in);
+        int delFlag = 0;
+        System.out.println("请输入删除对象学号：");
+        String sid = sc.nextLine();
+        for (int i = 0; i < array.size(); i++) {
+            Student s = array.get(i);
+            if (s.getId().equals(sid)) {
+                array.remove(i);
+                delFlag = 1;
+                break;
+            }
+        }
+        if (delFlag == 1) {
+            System.out.println("删除成功！");
+        } else {
+            System.out.println("对象不存在，删除失败！");
+        }
+    }
+
+    public static void chgStu(ArrayList<Student> array) {
+        int cngFlag = 0;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入修改学生学号：");
+        String sid = sc.nextLine();
+        String nSid;
+        boolean flag;
+        for (int i = 0; i < array.size(); i++) {
+            if (array.get(i).getId().equals(sid)) {
+                System.out.println("查找成功！");
+                System.out.println("请输入新的学生信息：");
+                while (true) {
+                    System.out.println("请输入新的学号：");
+                    nSid = sc.nextLine();
+                    flag = eqFlag(array, nSid);
+                    if (flag) {
+                        break;
+                    } else {
+                        System.out.println("学号已被占用，请重新输入：");
+                    }
+                }
+                array.get(i).setId(nSid);
+                System.out.println("请输入新姓名：");
+                String nName = sc.nextLine();
+                array.get(i).setName(nName);
+                System.out.println("请输入新年龄：");
+                int nAge = sc.nextInt();
+                array.get(i).setAge(nAge);
+                System.out.println("请输入新地址：");
+                String nAddr = sc.next();
+                array.get(i).setAddr(nAddr);
+                cngFlag = 1;
+                break;
+            }
+        }
+        if (cngFlag == 0) {
+            System.out.println("未找到相关信息，修改失败！");
+        } else {
+            System.out.println("修改信息成功！");
+        }
+    }
+
+    public static boolean eqFlag(ArrayList<Student> array, String id) {
+        boolean flag = true;
+
+        for (int i = 0; i < array.size(); i++) {
+            if (array.get(i).getId().equals(id)) {
+                flag = false;
+                break;
+            }
+        }
+
+        return flag;
+    }
+}
